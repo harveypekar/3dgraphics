@@ -1,18 +1,34 @@
 week 1 12/02 15/02
     Intro
 
+<<<<<<< Updated upstream
     
     Unity base classes and architecture
 
 
     C#/Math
         
+=======
+    Unity/CSharp
+        Unity base classes
+        Basic C# info
+        Features 
+        Lab?
+>>>>>>> Stashed changes
         
+week 2 19/02 22/02
+    3D problems
+        Coordinate systems
         Vectors
         Matrices
         Dot Product
-        Coordinate systems
+        ?Cross product
 
+    Refresher
+        C#
+        Labs
+
+<<<<<<< Updated upstream
         Lab
 
 week 2 19/02 22/02
@@ -64,5 +80,30 @@ week 10 29/04 02/05
     Guest lecture 1
 
     Guest lecture 2
+=======
+week 3 26/02 29/02
+    Basic pipeline
+        vertex / fragment 
+        meshes
+    Lab
+
+week 4 04/03 07/03
+    Textures / normal maps
+    post processing
+week 5 11/03 14/03
+     camera
+     lights 
+week 6 18/03 21/03
+    advanced pipeline
+    SRP etc
+week 7 25/03 28/03
+    BRDF's & aliasing
+week 8 15/04 18/04
+    Proc gen
+week 9 22/04 25/04
+    Project introduction
+week 10 29/04 02/05
+
+>>>>>>> Stashed changes
 week 11 06/05
-    Herhalingsweek
+    Revision week

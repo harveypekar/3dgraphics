@@ -10,7 +10,7 @@ public class CharactorController : MonoBehaviour
         Waving,
         JumpingJacks
     }
-
+    Vector3 too;
     public CharacterAnimation characterAnimation;
 
     // Start is called before the first frame update

@@ -3,6 +3,8 @@
  Open the "week_01_csharp" folder from unity hub.
 
  All exercises are implemented as scenes. Open the relevant scene for each exercise, and implement your solution there.
+ 
+ ![Scene Window](description_images/01_scenes.png)
 
  ## Exercise one : debug camera
 
@@ -10,11 +12,11 @@
 
  ### Extend the script to use "S" to move backwards
  
- Look at how "W" is implement
+ Look at how "W" is implement for a hint.
 
  ### Extend the script to use "A" and "D" for left and right
  
- This will involve using a different axis of the TransformComponent
+ This will involve using a different axis of the TransformComponent.
 
  ### Extend the script to pitch up and down
 
@@ -39,6 +41,10 @@
 
  Right now, our camera moves faster with a higher framerate. Make it so it always moves at the same speed, independent of the current framerate.
 
+ ### Common rotation bug
+
+ You might notice a bug that when you look down, move right, and go back up, your view is rolled. I'll explain why that is next week so you can fix it. But I can't stop you from trying to figure it out yourself.
+
  ### Motivation
 
  This is actually a useful script for your future projects, so remember you have it when you feel the need to move around your scene's at runtime.
@@ -58,7 +64,7 @@
 
  ### Make the cubes have color depending on their coordinate
 
- Starting from black, increase the red color component across the X axis, green along y, and blue along z.
+ Starting from black, increase the red color component across the X axis, green along y, and blue along z. 
 
  ##  Exercise three : material wall
 
@@ -72,9 +78,9 @@
 
  ### Vary the two main material parameters
 
- The parameter we're interested in is Smoothness. Vary Metallic along the X axis.
+ The parameter we're interested in are the smoothness and metallicness. It will require some detective work in how to set them, and what their name exactly is. I found them by attaching a debugger and inspecting the Material object assigned to the sphere (the Default Material).
 
  ### Motivation 
 
- This exercise teaches you a very simple but effective way to see what a material is capable is doing. This works especially well if a material has more than one parameter (in that case we can just drag a slider).
+ This exercise teaches you a very simple but effective way to see what a material is capable is doing. This works especially well if a material has more than one parameter (in that case we can just drag a slider). It's also a sneaky way to get you to set up a debugger.
  

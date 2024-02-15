@@ -45,6 +45,9 @@
 
  ## Exercise two : color cube
 
+ ![Color cubes](description_images/01_color_cube.png)
+
+
  Here we will learn how to instantiate GameObject's, as well as do some basic positioning in space
 
  There is a GameObject in the Scene called CubeSpawner. It has an attached script, which instantiates one cube. 
@@ -59,19 +62,17 @@
 
  ##  Exercise three : material wall
 
+ ![Material wall](description_images/01_material.png)
+
  Here we will learn how to modify Material parameters, and see what the range is of the default material.
-
- ### Create a 2D grid of spheres
-
- There already is a SphereSpawner in the Scene. Extend it to make a 2D grid of spheres along the X and Y axis.
 
   ### Create a 2D grid of spheres
 
- There already is a SphereSpawner in the Scene. Extend it to make a 2D grid of spheres
+ Create an empty GameObject called SphereSpawner in the Scene. Give it a ScriptComponent that has a script called SphereSpawner. Make is create a row spheres along the X  axis.
 
  ### Vary the two main material parameters
 
- The two parameters we're interested in are Metallic and Roughness. Vary Metallic along the X axis, and Roughness along the Y axis
+ The parameter we're interested in is Smoothness. Vary Metallic along the X axis.
 
  ### Motivation 
 

@@ -74,7 +74,7 @@
 
   ### Create a 2D grid of spheres
 
- Create an empty GameObject called SphereSpawner in the Scene. Give it a ScriptComponent that has a script called SphereSpawner. Make is create a row spheres along the X  axis.
+ Create an empty GameObject called SphereSpawner in the Scene. Give it a ScriptComponent, and point it towards the provided script file SphereSpawner.cs (it's already provided). Make is create a grid of spheres along the X axis and the Y axis.
 
  ### Vary the two main material parameters
 

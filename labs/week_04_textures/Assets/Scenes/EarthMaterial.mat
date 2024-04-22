@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BlinnPhongMaterial
-  m_Shader: {fileID: 4800000, guid: 27dd69668bff8634db9415ef7cd2db30, type: 3}
+  m_Name: EarthMaterial
+  m_Shader: {fileID: 4800000, guid: ba79b62d18ef92c4f91c54f74c8a4d29, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -44,11 +44,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: c1a6f0d1fcd2db74b8ce1f674a6b6c74, type: 3}
+        m_Texture: {fileID: 2800000, guid: 74f24b9644daa6a409b732c6b28fc6a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NightTex:
+        m_Texture: {fileID: 2800000, guid: 6c4cb4c7759684e43a58abd6e94f48f5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: a1d101663e5d3a941aaf63cb2e36c145, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -80,4 +88,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _NightColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

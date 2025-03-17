@@ -154,6 +154,8 @@ You have all the puzzle pieces now to implement mouselook. Once you're done, com
 
 ... and check one more thing. Move your camera high up, and move your camera to the left. Is the horizon still, horizontal, or is it rolled? If it's rolled, you have a bug (don't worry, 95% of students have this bug). To fix your bug, think about your rotation to the left. What are you rotating around? Think about transformation hierarchies. Where do you want to rotate?
 
+... have you had a look at [Transform.Rotate](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Transform.Rotate.html)?
+
 Once you've fixed your bug, commit and push.
 
 ### Add a second camera

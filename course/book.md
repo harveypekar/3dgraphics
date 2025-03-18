@@ -4,6 +4,8 @@
 
 Welcome everyone to the book for the course of 3d graphics. First of all, I would like to express how happy I am for teaching this course, for a lot of different reasons. It's a surprisingly varied topic, touching on subjects such as physics, mathematics, material science, software optimization, hardware design, aesthetics, human computer interaction, and many more. This is both a blessing and curse, which you might experience in this course. It's nice that there are a lot of different topics, but it can be a bit frustrating that the bigger picture (how we can use a pc to make an image) can seem vague until all the seperate pieces have already been understood.
 On a more personal note, I was a graphics programmer for a long time. I started by accident, I wanted to get into game programming, and due to circumstances met someone who specialized in graphics, leading me down the same path. I've never regretted it, the day-to-day of the topic is interesting, but due to the visual feedback and speed (it moves!) it has always been highly motivating. 
+
+
 I hope you find this course as interesting as I find the entire topic,
 Daan Nijs
 
@@ -17,7 +19,6 @@ We will also limit ourselves to "real-time rendering". This is the type of rende
 The opposite of "real-time rendering" doesn't really have a name, but is commonly referred to as "offline rendering". This refers to the fact the image is rendered long before it's needed. A typical example would be an animated movie. It might be rendered months before you get to see it. And this comes with some 
 
 We will be taking advantage of Unity3d, a game engine, to do this (introduced in a following chapter). 
-
 
 ## Unity
 
@@ -35,7 +36,6 @@ Unity is also the most popular game engine out there, and is used in other cours
 
 We will be working with a 3d coordinate system. In a 3d coordinate system, we have 3 axis: X, Y and Z. The place where the axis originate is called the origin.
 
-
 In Unity, the 3 axis have a common agreed upon meaning:
 
 * the X axis represents the direction towards the right
@@ -50,7 +50,7 @@ Unity also has Y as the up vector. This is an arbitrary choice: in a game about 
 
 The take away here, is that Unity has a *left-handed coordinate system* and has Y as the up vector.
 
-### Points and vectors
+### Points and vectors (and scalars)
 
 Now that we have our coordinate system, we can define locations in it, also called points. Points are defined as a tuple of 3 floating point numbers. 
 For example, the origin is a point, and will always have position (0, 0, 0). We could also define a point (2, 1, 3). This point will be 2 units right of the origin, one unit higher, and 3 units deeper (into the screen).
@@ -63,6 +63,8 @@ Vectors can be indexed by their component. For example, if we're only interested
 
 The difference between a vector and a point is subtle, and it's honestly not all that important. The most important thing is that some mathematical operations only make sense with vectors. If you're aware of whether you're working with points or vector's, you can occasionally notice that you're trying to do something that doesn't make logical sense.
 
+Now that we know what a vector is, it's easy to explain a scalar. A scalar is a single number, eg 5. 
+
 #### Addition
 
 We can freely add two vectors together. For example, '(1, 0, 0) + (0, 1, 0) = (1, 1, 0)'. The order in which you add them is irrelevant, we could have swapped them around for the same result: '(0, 1, 0) + (1, 0, 0) = (1, 1, 0)'
@@ -72,17 +74,158 @@ To make it less abstract, let's take 2 cities: Brussels and Hasselt. Brussels li
 
 We can freely add a point and a vector together. For example, we can express "10km east of Hasselt" as (90, 0, 0) + (10, 0, 0) = (100, 0, 0). The result is a point.
 
-
 We can **not** add 2 points together. To understand why, remember that vector's are directions. Hasselts position is a point (90, 0, 0). Antwerp's position is a point (0, 0, 60). I find it hard to image what the meaning is of adding both of their positions together
 
 I'm not going to point out the differences between points and vectors in he rest of the course, as in practice everyone talks about vectors, but I encourage you to keep it in mind. If you do that, you'll find it easier to find mistakes in your 3d logic.
 
-### Subtraction
+#### Subtraction
 
 Negation work very similar to addition. Given 'A-B', we subtract all B's components from the corresponding components of A, giving 'A-B = (A.x - B.x, A.y - B.y, A.z - B.z)'. Of course the order does matter a lot here!
 
-The use case for negation is very different from addion. It's also super useful and we're going to use it all the time.
+Even though they are very similar, the use case for negation is very different from addition. It's also super useful and we're going to use it all the time.
 
 To recap:
 Hasselt is at (90, 0, 0)
 Antwerp is at (0, 0, 60)
+
+If we subtract Antwerp from Hasselt, we get
+
+  (90, 0,  0)
+- ( 0, 0, 60)
+------------
+  (90, 0,-60)
+
+This gives us how to get from Antwerp to Hasselt. 
+
+#### Multiplication and division
+
+Multiplication and division of vectors is relatively simple. We cannot multiply or divide vectors by another vector. We can, however, multiply / divide by a scalar (single number).
+
+Multiplying a vector by a scalar multiplies each component (TODO check component introduced). The result is changing scaling the vector's length by the scalar.
+
+Let's take our Antwerp to Hasselt vector again.
+
+(90, 0,-60)
+
+And multiply it by .5
+
+(90, 0,-60) * .5 = (45, 0, -30)
+
+This, in effect, is the halfway point between Antwerpen and Hasselt.
+
+Why choose a scalar < 1.0 for the example? It's a shortcut for me to explain why I don't have to explain division: any division by a scalar X can be written as a multiplication with a scalar 1 / x.
+
+#### Normalization
+
+Normalization is the process of making a vector unit lenght, aka a length of one. This is a very important operation, as a lot of algorithms depend on vectors being unit length, and we'll see an example below.
+
+#### Dot Product
+
+A dot product is our first truly novel operator. The dot operator takes 2 vectors as arguments, and returns a scalar that is an indicator of "closeness". If both arguments are unit vectors's, the return value is the cosine of the angle between the two vectors, and hence lies in the range [-1, 1].
+
+##### Geometric interpretation
+
+##### Formula
+
+##### Usage
+
+The dot product is a very commonly used operator. Untoubtebly the most important case is that we use it to caculate the incoming light on a points. Since the amount of incoming light is depending on the angle of the light, we use the dot product between the normal and the light vector to account for that.
+
+#### Cross product
+
+The cross product takes 2 vectors as input, and return a vector perpendicular to both input vectors. The length of the resulting vector depends on the angle between the input vectors, and their length.
+
+##### Formula
+
+##### Usage
+
+The classic usage for the cross product is calculating the normal of a triangle. 
+
+## 3D transformations & spaces
+
+Objects in 3d space are not static, they can move. In 3d graphics, we call that a transformation, and we will look at 3 different kinds of transformations.
+
+### Translation
+
+When an object translate in 3D space, it moves to another position, without rotating or scaling (explained later).
+
+The **translation** is the vector between the origin and destion, or, simply put, the amount and direction should move.
+
+In unity, 
+
+### Rotation
+
+
+#### Euler Angles
+
+Object in 3D can rotate along all 3 axis: X, Y and Z. To figure out how an object rotates, hold your left hand in the trust perpendicular position. For example, to see what a rotation along X looks like, rotate your hand without moving your thumb (your thumb should rotate in place).
+
+1. The rotation around X (your thumb) is called **pitch**. Pitch is rotating your head up and down.
+2. The rotation around Y (your index finger) is called **yaw**. Yaw is rotating your head left and right.
+3. The rotation around Z (your middle finger) is called **roll**. Roll is moving your head side to side so the floor is not horizontal anymore. 
+
+
+This way of thinking about rotations is called euler angles: every rotation is representable by 3 angles on 3 of the axis.
+
+Euler angles are attractive because they're intuitive. Unfortunately, they're also problematic. We won't go into detail here, but, if you're curious, one of the major problems they have is their suseptibility to Gimball Lock. Another is that they interpolate in an undesirable way.
+
+#### Quaternion
+
+Quaternions are another way to represent rotations. They are commonly used in 3d graphics, as they do not suffer from the same gimble lock and interpolation problems that Euler angles do.
+
+We won't look into how quaternions actually work, as they can be difficult to visualize (and this has even become a bit of a meme in the graphics community). If you're interested in learning how they work, you can have a look at ![3blue1brown's explanation](https://www.youtube.com/watch?v=d4EgbgTm0Bg).
+
+What is important, is how we use quaternions.
+
+We can 
+
+## Transformation stack
+
+Armed with the knowledge of transformations, we can finally answer an important question: how does an object end up in the correct position on the screen?
+
+Consider a static object. Static, in this context, means the object never moves. It always stays in the same place. Yet, when we move our mouse (which moves the camera), the object moves around on the screen.
+
+It's obvious that some transformation between spaces has to happen for the object to end up in the right space. And a transformation is between two spaces.
+
+
+
+## The rendering pipeline
+
+Rendering is the act of taking models, textures, scene descriptions, and other types of data describing a scene, and, using algorithms, creating a 2d image of the scene.
+
+This is quite an abstract description
+
+
+### Models
+
+#### Vertices
+
+A model is a 3d shape, almost always consisting out of triangles. Each triangles consist out of 3 *vertices* (singular : vertex). A vertex is more than just a point in 3d space, but it does always have a position. 
+
+For example, we can store color information in a vertex as a float3.
+
+TODO image
+
+Nowadays, we don't really store color on vertices anymore (we use textures for that). There are several other attributes that are important and relevant, but they are covered in the section where they are used.
+
+* Normals are covered in the shading section
+* UV coordinates are covered in the texture session
+
+#### Triangles
+
+
+
+## Shading
+
+Shading is the process of deciding what colour the surface of an object should be, based on it's shape and the surounding lighting. The term comes from pencil drawing, where different intensities are drawn using different densities of pencil strokes, creating the illusion of lighting and depth. 
+
+### The shading pipeline
+
+## Pipeline
+
+### General pipeline
+
+### Forward vs Deferred rendering
+
+### Basic, SRP, URP, HDRP
+

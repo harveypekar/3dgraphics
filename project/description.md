@@ -6,12 +6,13 @@ This is the assignment for the course '3d graphics'. This assignment will be gra
 
 ## Requirements
 
-* You implemented features described in this document (you will not get any points for implementing something that isn't described here)
+* You implemented features described in this document (you will not get any points for implementing something that isn't described here, or for features marked as 'bonus')
 * You understand all the code that you submit, even if you have it from an AI model or a tutorial
 * You are not allowed to share code with others taking (or who have taken) this course
 * You are not allowed to use packages outside of the core Unity ones, without explicit approval (send me an email, and add a motivation)
 * Feel free to add extra features (eg debug camera, debug visualizations, debug logging), but if they interfere with your result (how things look / act), have a way to turn them on/off and have them default off.
 * Your code is tidy. By this I mean that you shouldn't have large swathes of duplicated code, bad indentation, or badly named variables. Do not worry too much about using patterns (assume your code won't be extended in the future) or complicated oo techniques, this is not the objectives of this course.
+* For each asset (texture, models) that you didn't create yourself, you have an entry in a text file (in the root of your repository, named 'attributions.txt'). The entry has the path to the asset on disk, the url of where you got it from, and the license. Make sure the license is compatible with how you're using it (educational purposes)
 
 ## First steps
 
@@ -153,8 +154,6 @@ Unity is also giving us a [quite useful dump on rotations](https://docs.unity3d.
 You have all the puzzle pieces now to implement mouselook. Once you're done, commit and push.
 
 ... and check one more thing. Move your camera high up, and move your camera to the left. Is the horizon still, horizontal, or is it rolled? If it's rolled, you have a bug (don't worry, 95% of students have this bug). To fix your bug, think about your rotation to the left. What are you rotating around? Think about transformation hierarchies. Where do you want to rotate?
-
-... have you had a look at [Transform.Rotate](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Transform.Rotate.html)?
 
 Once you've fixed your bug, commit and push.
 
@@ -369,7 +368,7 @@ This should ensure that you always see a lot of terrain, without running out of 
 
 ### Mesh generation optimization
 
-You might have noticed it takes a while to generate a chunk's mesh, or that the frame rate goes down a lot when you've loading in a bunch of chunks. The reason is that we're generating a ton of triangles that will never be visible.
+You might have noticed it takes a while to generate a chunk's mesh, or that the frame rate goes down a lot when you've loading in a bunch of chunks. The reason is that we're generating a ton of triangles that will never be visible. In fact, mort of our triangles will never be visible, as they are between two blocks.
 
 For example: let's look at some blocks from the top
 
@@ -377,7 +376,7 @@ XXX
 X0X
 XXX 
 
-This is a 2D slice, but imagine the block 0 is surrounded on all sides by other blocks. We will never be able to see it, so there's no point in generating any triangles to represent it. In fact, imagine we have two blocks next to eachother:
+This is a 2D slice, but imagine the block 0 is surrounded on all sides by other blocks. We will never be able to see it, so there's no point in generating any triangles to represent it. Even simpler, imagine we have two blocks next to eachother:
 
 X|X
 
@@ -390,9 +389,71 @@ Modify your mesh generation routine to skip invisible squares. The algorithm is 
 
 Take a note of the speedup you get. Optimization can be quite motivating when you see the advantages.
 
+## Water
+
+Our world is a bit dry, so let's add some water.
+
+### Geometry
+ Create a new function called 'generateTesselatedPlane'. This function should create a plane (rectangle). It should be *tesselated*, which means that it should be composed out of more squares/triangles than you strictly need for a flat surface. Make sure the function takes two parameters (x squares, y squares). For example, if you have 3 squares in the x direction, and 2 squares in the y direction.
+
+
+TODO make a decent image
+
+Once you have your plane, create one for each chunk you make. Make sure it's at the same height for each chunk.
+
+TODO take screenshot
+
+### Pixel Shader
+
+We're going to implement a water shader. Water is distinctive by having three components. A reflective component, which basically acts like a mirror. A refractive component, which is looking through the water. And a weight to decide how much each of the two contributes to the final color.
+
+Look at the following image. The color of the water is both the bottom of the lake (rocks), as well as the color of the sky. The graph below sketches the effect.
+
+![Water in the real world](./description_images/water.png)
+
+![Water diagram](./description_images/water_rr.png)
+
+Note that 'incident' is a fancy way of saying 'incoming'. 
+
+Anyway, let's get to work. 
+
+#### Reflection
+
+Reflection is a hard problem in games. That's why you see relatively few mirror or reflective surfaces. We're also going to cheat a bit. We're not going to reflect our actual chunks, we're going to use a very simple technique.
+
+First, look for a skybox texture online that you can use. It doesn't matter if it's fitting for minecraft, it can be a space scene. Just make sure you're allowed to use it according to the license. Also make sure that it's a cube texture. Or, if it's 6 separate textures, that you can make a cube out of it.
+
+Set it up as the skybox of your scene: [documentation](https://docs.unity3d.com/Manual/skyboxes-using.html). Don't add the directional light as the guide says.
+
+Now, in your shader, sample your cube texture with the reflected view ray. 
+
+The view ray is the forward direction of the camera. To reflect, we need another vector to reflect over. This is the normal we calculated in our vertex shader. To do the actual reflection, we can use the 'reflect' function, which takes two arguments: the vector to reflect, and the one to reflect over.
+
+Put it all together, and your water should look like a perfect mirror of the sky. 
+
+
+#### Refraction
+
+Refraction usually bends the object under the surface of the water. 
+
+![Straw](./description_images/straw.jpg)
+
+We're going to implement that by using the oldest trick in the book: ignoring it. We're not going to bend what's beneath the water.
+
+We do need to show it though. This is relative simply: all we need to do is turn our material transparent. 
+
+Set the 'render mode' of your material to transparent. Now, when you write to the color in your pixel shader, you can set the alpha. You might have noticed that the output color of your pixel shader has four components. The first three are `r`, `g`, and `b`, as you know and love (from CSS). The final one is `a`, which determines how transparent your pixels will be. 
+
+#### Combining
+
+Time to combine both refraction and reflection
+
+Look again at our reference image: ![water](./description_images/water.png)
+
+Notice how close to the camera, the water is mostly exhibiting refraction.
+
 ## Hints
 
-* You probably want to use the camera you implemented in the first lab
 * Your IDE has a shortcut to automatically format code. Please run it at least before your final commit, preferably more often.
 * Git is not just a source control, it's also a backup. Commit and push every time you stop working, even if your code doesn't compile.
 * Seek extra information online. Minecraft and especially Unity are very popular, so there's an avalanche of existing material out.
@@ -405,7 +466,9 @@ Take a note of the speedup you get. Optimization can be quite motivating when yo
 
 ## Version list
 
-0.0.4 Images and typo fixes for chunk generation
-0.0.3 Add first bonus chapter
-0.0.2 Add 3rd person camera
-0.0.1 Initial versions
+* 0.0.6 Remove outdated information
+* 0.0.5 Add water
+* 0.0.4 Images and typo fixes for chunk generation
+* 0.0.3 Add first bonus chapter
+* 0.0.2 Add 3rd person camera
+* 0.0.1 Initial versions

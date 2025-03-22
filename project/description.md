@@ -18,7 +18,7 @@ This is the assignment for the course '3d graphics'. This assignment will be gra
 
 * Accept the assignment on [Github Classroom](https://classroom.github.com/a/uiOfXHY_)
 * Submit the link to the repo on your github that you got from accepting the assignment on Github
-* Create a new Universal 3D (or in older editors, URP) project in your repository. !!! make sure to name it 'proj' !!! (the reason of this is that the .gitignore file a)
+* Create a new Universal 3D (or in older editors, URP) project in your repository. !!! make sure to name it 'proj' !!! (the reason of this is that the .gitignore file assumes this folder)
 
  ![project creation wizard](./description_images/project_creation.png)
  
@@ -274,10 +274,11 @@ Make a scriptfile, and add an enum `BlockType` with two members, `Empty`and `Bed
 
 Create a class called `Chunk`. Implement the following fields for the `Chunk`:
 
-* `int2 chunkCoordinate` this has nothing to do with float coordinates or transforms. This is the coordinates in our ChunkGrid.
+* `int2 chunkCoordinate` this has nothing to do with float coordinates or transforms. This is the coordinates in our ChunkGrid. We don't necessarily need these coordinates for our features, but they can be very handy when we're trying to debug
+  
 * `BlockType[][][] blocks` this 3 dimensional array holds all of our blocks
 
-Now, let's finally get to rendering. We'll start by rendering a block.
+Now, let's finally get to rendering. We'll start by rendering a single block.
 
 * First, we need some test data. Set the block at [0,0,0] to type `Bedrock`. Leave the rest as `Empty`.
 * We need also need a GameObject, Mesh, MeshFilter and Material. The easiest way is to add a GameObject with a Prefab, such as a Cube, and overwrite the Mesh with your new one
@@ -292,7 +293,7 @@ Pat yourself on the back. You've made the quintessential minecraft primitive. Ma
 Now, we could render our entire world by using a GameObject with a cube mesh for each block. However, this is a bad idea. We would end up with millions of `GameObject`, which will be bad for performance. We'll see much better performance if we batch all of our blocks in a chunk in a single `Mesh`. So let's do that.
 
 * Generalize your mesh generation by looping through all the elements in the blocks array. You will need to have a triple loop.
-* Create an empty ArrayList (or other collection you think is appropriate) of vertices and indices.
+* Create an empty `ArrayList` (or other collection you think is appropriate) of vertices and indices.
 * Whenever you encounter a Bedrock block, generate the vertices and indices for a block. Set the positions of the vertices to the blocks place in `chunk space`:
     * A block at position [0, 0, 0]  will have it's smallest vertices be (0.0f, 0.0f, 0.0f) and it's largest (1.0f, 1.0f, 1.0f)
     * A block at position [2, 5, 3]  will have it's smallest vertices be (2.0f, 5.0f, 3.0f) and it's largest (3.0f, 6.0f, 3.0f)
@@ -341,7 +342,15 @@ The description is intentionally vague, and so are the requirements. There's a m
 
 Do the same for `Dirt`: add a layer on top of the stone, make sure it's interesting. There should be parts of the world with a thicker layer of dirt, and some parts where the stone surfaces and there is no dirt.
 
-Once you're satisfied with your result, you're ready to move on. 
+Once you're satisfied with your result, you're ready to move on to shading.
+
+### Shading
+
+Our shading is pretty basic now. Let's improve it.
+
+Change the dirt and stone shaders to be better. Try to match the typical mincraft look. You'll want to use a texture. Find fitting textures online. Don't forget to check the license and to add the assets to your attributions file.
+
+When you use 
 
 ### Multiple chunks
 
@@ -372,13 +381,13 @@ You might have noticed it takes a while to generate a chunk's mesh, or that the 
 
 For example: let's look at some blocks from the top
 
-XXX
-X0X
-XXX 
+    XXX
+    X0X
+    XXX 
 
 This is a 2D slice, but imagine the block 0 is surrounded on all sides by other blocks. We will never be able to see it, so there's no point in generating any triangles to represent it. Even simpler, imagine we have two blocks next to eachother:
 
-X|X
+    X|X
 
 Where | is the square generated between the two X blocks. We do not need to create this square; it will be between two solid blocks.
 
@@ -450,7 +459,30 @@ Time to combine both refraction and reflection
 
 Look again at our reference image: ![water](./description_images/water.png)
 
-Notice how close to the camera, the water is mostly exhibiting refraction.
+Notice the further away, the more the water becomes reflective. The closer to the camera, the water starts getting more transparant(refractive)
+
+The difference is the relationship of the camera forward vector and the surface of the water. In the distance, our view vector is almost parallell to the surface of the water. Closeby, we're looking down on the surface, and the water is transparent.
+
+We have a trusty tool in our belt for seeing how close together two vector are: the dot product. Use the dot product to calculate how parallell the view vector is to the surface of the water, and blend appropriately between reflective and refractive color.
+
+## Portal
+
+![Portal](./description_images/portal.jpg)
+
+A portal in minecraft is defined as rectangle of 4x5 blocks, made in  obsidian.
+
+The center doesn't have any blocks, but has a shimmering purple plane.
+
+Your job:
+* Every multiple of 10 chuncks, add a portal to the chunk. Eg the chunks at (0,0), (10, 0), (0, 10), and (10, 10) all should have a portal, and the portal should sit mostly correctly on the terrain (the portal is on top of the terrain, and the center is not obscured by blocks),
+* Create a new lit material for the obsidian blocks. Use procedural generation to generate a heightmap, and use finite differencing to turn this into your normals. The color can be anything you want. 
+* Create geometry and material for the center of the portal. How you do this is completely free, just make sure the effect is interesting. You must use at least one custom shader. Spend at least an hour on this.
+
+## Moon
+
+Let's make a moon, so we can do some gooch shading. Add a sphere high above your terrain. Create a custom unlit shader and material. 
+
+We're going to implement 
 
 ## Hints
 

@@ -194,8 +194,7 @@ That 'should' work. Try it out, and try to break it. All good? Commit and push, 
 * Add up and down movement in the same way you did left/right
 * Add changing the distance from the camera to the character using scroll wheel. 
 
-
-Commit, push, and give yourself a pat on the on back. It might not seem like much, but you've gotten some translation and rotation under your belt, and you have a couple of things that work. Now, on to the main event. Or a detour, whichever you choose
+Commit, push, and give yourself a pat on the on back. It might not seem like much, but you've gotten some translation and rotation under your belt, and you have a couple of things that work. Now, on to the main event. Or a detour, whichever you choose.
 
 ## Bonus chapter
 
@@ -336,7 +335,7 @@ Change the generation of the stone layer to be plausible (looks like something r
 * Create a function that takes a world coordinate in XY (this is the coordinate of the column where we want to determine how high the stone layer goes). It will return the height of the stone layer as a single float, in world space
 * Once you have your stone layer height, you can set all your blocks in that column to stone
 * You can use fBm for this, but it's not mandatory
-* You can layer several functions to more interesting results. An example would be these two functioos : [Bias & Gain](http://demofox.org/biasgain.html). Make sure to play with their parameter and check the result on the left. They can be used to push up/down/towards the middle any singular float value. You might have to remap your input value (eg your stone layer goes from 1 - 32) to (0-1) to use these functions, but you can remap them back after you called them.
+* You can layer several functions to more interesting results. An example would be these two functions : [Bias & Gain](http://demofox.org/biasgain.html). Make sure to play with their parameter and check the result on the left. They can be used to push up/down/towards the middle any singular float value. You might have to remap your input value (eg your stone layer goes from 1 - 32) to (0-1) to use these functions, but you can remap them back after you called them.
 
 The description is intentionally vague, and so are the requirements. There's a million ways to generate terrain procedurally, and it's fun to figure out what works and what doesn't. If you're feeling lost, I encourage you to look at the tutorials linked in the hints section. Remember: you can use all the mathematical functions you know, just for the way they "look" when you plot them. If you're looking regular bumps, sin() might be what you're looking for, no matter what sin() actually does. Think about it visually. If this seems daunting, check out [this tutorial](https://youtu.be/Q16audEXrcI?list=PLVsTSlfj0qsWEJ-5eMtXsYp03Y9yF1dEn).
 
@@ -346,11 +345,10 @@ Once you're satisfied with your result, you're ready to move on to shading.
 
 ### Shading
 
-Our shading is pretty basic now. Let's improve it.
+Our dirt and stone shaders are pretty basic now, so let's improve them.
 
-Change the dirt and stone shaders to be better. Try to match the typical mincraft look. You'll want to use a texture. Find fitting textures online. Don't forget to check the license and to add the assets to your attributions file.
-
-When you use 
+1 Look for appropriate textures online. Make sure that the license allows you to use them, and attribute them in the text file. Alternatively, make your own.
+2 Create the texture you want to sample. I think it's easiest to use a TextureCube, because you can create the sampling coordinate as the vector from the point you're shading, to the center of the block. But you can try and use a Texture2D with all six size as well, with some extra math to create the coordinate. !!! Do not use a 'texture atlas'. A texture atlas encode's all textures into a texture 2D. This is an oldschool method to pack several textures into one texture. In this project, it isn't needed. And if it would be, we could use a feature called texture arrays, which are faster. !!!
 
 ### Multiple chunks
 
@@ -403,14 +401,29 @@ Take a note of the speedup you get. Optimization can be quite motivating when yo
 Our world is a bit dry, so let's add some water.
 
 ### Geometry
- Create a new function called 'generateTesselatedPlane'. This function should create a plane (rectangle). It should be *tesselated*, which means that it should be composed out of more squares/triangles than you strictly need for a flat surface. Make sure the function takes two parameters (x squares, y squares). For example, if you have 3 squares in the x direction, and 2 squares in the y direction.
-
-
-TODO make a decent image
+Create a new function called 'generateTesselatedPlane'. This function should create a plane (rectangle). It should be *tesselated*, which means that it should be composed out of more squares/triangles than you strictly need for a flat surface. Make sure the function takes two parameters (x squares, y squares). For example, if you have 3 squares in the x direction, and 2 squares in the y direction.
 
 Once you have your plane, create one for each chunk you make. Make sure it's at the same height for each chunk.
 
-TODO take screenshot
+![Water Plane](./description_images/water_plane.png)
+
+### Vertex shader
+
+Add some animation to the vertex. Animation means the position changes over time. An example would be using `sin(x)`, but adding time to the argument x. This would be `sin(x+t)`. If you change your vertex hight by the return value, you should see waves moving with time. You'll also notice it's uninteresting: each wave is the same height, and there's no variation over the width of an individual wave. 
+
+![Sine wave](./description_images/sin3d.png)
+
+Implement a more complicated function to move your vertex, that at least isn't constant in one dimension.
+
+Once you've done that, you're faced with one last hurdle. The normals in your vertices don't magically change when you animate the vertex position. You're going to have to recalculate the normal, and the easiest way to do it is finite differencing.
+
+Say your function to calculate the height is `f(x, y)`. Construct 3 points 
+
+A = (x, y, f(x, y))
+B = (x+e, y, f(x+e, y))
+C = (x, y+e, f(x, y+e))
+
+These are three point on the surface of your function, so you can construct your normal using these 3 points.
 
 ### Pixel Shader
 
@@ -440,7 +453,6 @@ The view ray is the forward direction of the camera. To reflect, we need another
 
 Put it all together, and your water should look like a perfect mirror of the sky. 
 
-
 #### Refraction
 
 Refraction usually bends the object under the surface of the water. 
@@ -451,7 +463,7 @@ We're going to implement that by using the oldest trick in the book: ignoring it
 
 We do need to show it though. This is relative simply: all we need to do is turn our material transparent. 
 
-Set the 'render mode' of your material to transparent. Now, when you write to the color in your pixel shader, you can set the alpha. You might have noticed that the output color of your pixel shader has four components. The first three are `r`, `g`, and `b`, as you know and love (from CSS). The final one is `a`, which determines how transparent your pixels will be. 
+Set the 'render mode' of your material to transparent. Now, when you write to the color in your pixel shader, you can set the alpha. You might have noticed that the output color of your pixel shader has four components. The first three are `r`, `g`, and `b`, as you know and love. The final one is `a`, which determines how transparent your pixels will be. Set it first to 0.5 to check that your material is actually transparent. 
 
 #### Combining
 
@@ -459,11 +471,13 @@ Time to combine both refraction and reflection
 
 Look again at our reference image: ![water](./description_images/water.png)
 
-Notice the further away, the more the water becomes reflective. The closer to the camera, the water starts getting more transparant(refractive)
+Notice the further away, the more the water becomes reflective. The closer to the camera, the water starts getting more transparent(refractive)
 
-The difference is the relationship of the camera forward vector and the surface of the water. In the distance, our view vector is almost parallell to the surface of the water. Closeby, we're looking down on the surface, and the water is transparent.
+The difference is the relationship of the camera forward vector and the surface of the water. In the distance, our view vector is almost parallel to the surface of the water. Closeby, we're looking down on the surface, and the water is transparent.
 
-We have a trusty tool in our belt for seeing how close together two vector are: the dot product. Use the dot product to calculate how parallell the view vector is to the surface of the water, and blend appropriately between reflective and refractive color.
+![](./description_images/water_rr.png)
+
+We have a trusty tool in our belt for seeing how close together two vector are: the dot product. Use the dot product to calculate how parallel the view vector is to the surface of the water, and blend appropriately between reflective and refractive color.
 
 ## Portal
 
@@ -474,15 +488,11 @@ A portal in minecraft is defined as rectangle of 4x5 blocks, made in  obsidian.
 The center doesn't have any blocks, but has a shimmering purple plane.
 
 Your job:
-* Every multiple of 10 chuncks, add a portal to the chunk. Eg the chunks at (0,0), (10, 0), (0, 10), and (10, 10) all should have a portal, and the portal should sit mostly correctly on the terrain (the portal is on top of the terrain, and the center is not obscured by blocks),
+* Every multiple of 10 chunks, add a portal to the chunk. Eg the chunks at (0,0), (10, 0), (0, 10), and (10, 10) all should have a portal, and the portal should sit mostly correctly on the terrain (the portal is on top of the terrain, and the center is not obscured by blocks),
 * Create a new lit material for the obsidian blocks. Use procedural generation to generate a heightmap, and use finite differencing to turn this into your normals. The color can be anything you want. 
-* Create geometry and material for the center of the portal. How you do this is completely free, just make sure the effect is interesting. You must use at least one custom shader. Spend at least an hour on this.
+* Create geometry and material for the center of the portal. How you do this is completely free, just make sure the effect is interesting. Remember, you have a method to create a plane. You must use at least one custom shader. Spend at least an hour on this.
 
-## Moon
-
-Let's make a moon, so we can do some gooch shading. Add a sphere high above your terrain. Create a custom unlit shader and material. 
-
-We're going to implement 
+Commit, and push. Don't forget to check that your 
 
 ## Hints
 
@@ -498,6 +508,8 @@ We're going to implement
 
 ## Version list
 
+* 0.1.0 Portal
+* 0.0.7 Water
 * 0.0.6 Remove outdated information
 * 0.0.5 Add water
 * 0.0.4 Images and typo fixes for chunk generation

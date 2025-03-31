@@ -289,7 +289,14 @@ Now, let's finally get to rendering. We'll start by rendering a single block.
 
 Pat yourself on the back. You've made the quintessential minecraft primitive. Make a git commit and push it. (Of course you can commit and push more often, this is just a reminder. I commit whenever a thing is working, no matter how tiny, or every hour)
 
-Now, we could render our entire world by using a GameObject with a cube mesh for each block. However, this is a bad idea. We would end up with millions of `GameObject`, which will be bad for performance. We'll see much better performance if we batch all of our blocks in a chunk in a single `Mesh`. So let's do that.
+Now, we could render our entire world by using a GameObject with a cube mesh for each block. However, this is a bad idea. We would end up with millions of `GameObject`, which will be bad for performance. We'll see much better performance if we batch all of our blocks of the same material in a single `Mesh`. 
+
+To clarify:
+
+* Our world consists of multiple chunks
+* A chunk consists out of one or more meshes, each of which has all the blocks of a chunk with the same blocktype
+
+So let's do that.
 
 * Generalize your mesh generation by looping through all the elements in the blocks array. You will need to have a triple loop.
 * Create an empty `ArrayList` (or other collection you think is appropriate) of vertices and indices.
@@ -489,7 +496,8 @@ The center doesn't have any blocks, but has a shimmering purple plane.
 
 Your job:
 * Every multiple of 10 chunks, add a portal to the chunk. Eg the chunks at (0,0), (10, 0), (0, 10), and (10, 10) all should have a portal, and the portal should sit mostly correctly on the terrain (the portal is on top of the terrain, and the center is not obscured by blocks),
-* Create a new lit material for the obsidian blocks. Use procedural generation to generate a heightmap, and use finite differencing to turn this into your normals. The color can be anything you want. 
+* Create a new unlit material for the obsidian blocks. Implement blinn-phong lighting. As a light source, only account for the directional light in the scene. You can use [_WorldSpaceLightPos0](https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html) to get the direction. For the formulae, either refer to the slider, or if you want it explained a different way, [this chapter](https://developer.download.nvidia.com/CgTutorial/cg_tutorial_chapter05.html) made it click for me originally 
+* Use procedural generation to generate a heightmap, and use finite differencing to turn this into your normals. The color can be anything you want. 
 * Create geometry and material for the center of the portal. How you do this is completely free, just make sure the effect is interesting. Remember, you have a method to create a plane. You must use at least one custom shader. Spend at least an hour on this.
 
 Commit, and push. Don't forget to check that your 
@@ -507,7 +515,8 @@ Commit, and push. Don't forget to check that your
 * Again, send me an email. No need to get frustrated or stuck.
 
 ## Version list
-
+* 0.2.0 Added blinn phong lighing 
+* 0.1.1 Minor clarification
 * 0.1.0 Portal
 * 0.0.7 Water
 * 0.0.6 Remove outdated information

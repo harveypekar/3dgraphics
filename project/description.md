@@ -1,5 +1,3 @@
-This document is incomplete. It will be communicated on Toledo when it is complete, en this message won't be present at the top
-
 # 3D Graphics project
 
 This is the assignment for the course '3d graphics'. This assignment will be graded both as code (I check your results at home), as well as an oral exam defending your code. This document describes what you need to implement. I recommend you don't start coding from the start, I would recommend you scan this entire document, especially the hints section, before you start.
@@ -13,6 +11,14 @@ This is the assignment for the course '3d graphics'. This assignment will be gra
 * Feel free to add extra features (eg debug camera, debug visualizations, debug logging), but if they interfere with your result (how things look / act), have a way to turn them on/off and have them default off.
 * Your code is tidy. By this I mean that you shouldn't have large swathes of duplicated code, bad indentation, or badly named variables. Do not worry too much about using patterns (assume your code won't be extended in the future) or complicated oo techniques, this is not the objectives of this course.
 * For each asset (texture, models) that you didn't create yourself, you have an entry in a text file (in the root of your repository, named 'attributions.txt'). The entry has the path to the asset on disk, the url of where you got it from, and the license. Make sure the license is compatible with how you're using it (educational purposes)
+
+## Checklist 
+
+* Check that there's nothing left to commit ('git status')
+* Check that you pushed (check on github that the last commit is there, or just 'git push')
+* Do a sanity check. Clone your repo in an empty directory. Open it, run it, and check it for errors. From experience, it's really easy to forget to commit files, and believe it works because it works locally. It's also really dangerous, as you might be missing entire files, and I can't grade what I can't see
+* Check that each asset that you didn't create yourself listed in attributions.txt. 
+* Check that attributions.txt is committed and pushed (easiest to check on github)
 
 ## First steps
 
@@ -515,6 +521,7 @@ Commit, and push. Don't forget to check that your
 * Again, send me an email. No need to get frustrated or stuck.
 
 ## Version list
+* 1.0.0 Checklist
 * 0.2.0 Added blinn phong lighing 
 * 0.1.1 Minor clarification
 * 0.1.0 Portal

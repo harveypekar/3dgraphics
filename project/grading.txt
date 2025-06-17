@@ -1,0 +1,16 @@
+Outside packages without approval
+Code tidiness
+Proper attributions
+1st person camera 
+3d person camera
+Several blocks in one mesh
+mesh is optimized for shared faces
+Mix of stone and dirt atop bedrock
+Plausible stone and layer
+Appropriate shading for dirt and stone
+Textures (but not texture atlas) for dirt and stone
+Multiple chunks are seamless
+Terrain streaming
+Water: tesselated plane
+Unlit portal with blinn-phong using directional
+Procgenned normal map

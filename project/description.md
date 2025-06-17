@@ -281,7 +281,7 @@ Create a class called `Chunk`. Implement the following fields for the `Chunk`:
 
 * `int2 chunkCoordinate` this has nothing to do with float coordinates or transforms. This is the coordinates in our ChunkGrid. We don't necessarily need these coordinates for our features, but they can be very handy when we're trying to debug
   
-* `BlockType[][][] blocks` this 3 dimensional array holds all of our blocks
+* `BlockType[,,] blocks` this 3 dimensional array holds all of our blocks
 
 Now, let's finally get to rendering. We'll start by rendering a single block.
 
@@ -360,6 +360,7 @@ Once you're satisfied with your result, you're ready to move on to shading.
 
 Our dirt and stone shaders are pretty basic now, so let's improve them.
 
+//TODO make it clear code/material needs to be created
 1 Look for appropriate textures online. Make sure that the license allows you to use them, and attribute them in the text file. Alternatively, make your own.
 2 Create the texture you want to sample. I think it's easiest to use a TextureCube, because you can create the sampling coordinate as the vector from the point you're shading, to the center of the block. But you can try and use a Texture2D with all six size as well, with some extra math to create the coordinate. !!! Do not use a 'texture atlas'. A texture atlas encode's all textures into a texture 2D. This is an oldschool method to pack several textures into one texture. In this project, it isn't needed. And if it would be, we could use a feature called texture arrays, which are faster. !!!
 
@@ -521,7 +522,7 @@ Commit, and push. Don't forget to check that your
 * Again, send me an email. No need to get frustrated or stuck.
 
 ## Version list
-* 1.0.2 
+* 1.0.2 Clarify heightmap more for the portal
 * 1.0.1 Replace mesh creation reference to lab 3 with a link to Unity documentation
 * 1.0.0 Checklist
 * 0.2.0 Added blinn phong lighing 
